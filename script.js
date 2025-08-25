@@ -570,126 +570,7 @@ class FloatingElements {
     }
 }
 
-// Contact physics playground
-class ContactPhysics {
-    constructor() {
-        this.playground = document.getElementById('contact-physics');
-        this.engine = Engine.create();
-        this.world = this.engine.world;
-        this.balls = [];
-        
-        if (this.playground) {
-            this.init();
-        }
-    }
 
-    init() {
-        this.engine.world.gravity.y = 0.8;
-
-        this.render = Render.create({
-            element: this.playground,
-            engine: this.engine,
-            options: {
-                width: 400,
-                height: 400,
-                wireframes: false,
-                background: 'transparent',
-                showVelocity: false,
-                showAngleIndicator: false,
-                showDebug: false
-            }
-        });
-
-        // Create boundaries
-        const walls = [
-            Bodies.rectangle(200, 410, 400, 20, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(200, -10, 400, 20, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(-10, 200, 20, 400, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(410, 200, 20, 400, { isStatic: true, render: { visible: false } })
-        ];
-
-        World.add(this.world, walls);
-
-        // Create interactive balls
-        this.createContactBalls();
-
-        // Add mouse control
-        const mouse = Mouse.create(this.render.canvas);
-        const mouseConstraint = MouseConstraint.create(this.engine, {
-            mouse: mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: { visible: false }
-            }
-        });
-
-        World.add(this.world, mouseConstraint);
-
-        Render.run(this.render);
-        Engine.run(this.engine);
-
-        // Add click to create new balls
-        this.render.canvas.addEventListener('click', (e) => {
-            const rect = this.render.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            this.addBall(x, y);
-        });
-    }
-
-    createContactBalls() {
-        const colors = ['#00f5ff', '#7c3aed', '#ff0080', '#ff6b35'];
-        
-        for (let i = 0; i < 6; i++) {
-            const ball = Bodies.circle(
-                50 + i * 50,
-                50 + Math.random() * 100,
-                Math.random() * 15 + 10,
-                {
-                    restitution: 0.9,
-                    friction: 0.001,
-                    render: {
-                        fillStyle: colors[i % colors.length],
-                        strokeStyle: colors[i % colors.length],
-                        lineWidth: 2
-                    }
-                }
-            );
-
-            this.balls.push(ball);
-        }
-
-        World.add(this.world, this.balls);
-    }
-
-    addBall(x, y) {
-        const colors = ['#00f5ff', '#7c3aed', '#ff0080', '#ff6b35'];
-        const ball = Bodies.circle(
-            x,
-            y,
-            Math.random() * 15 + 10,
-            {
-                restitution: 0.9,
-                friction: 0.001,
-                render: {
-                    fillStyle: colors[Math.floor(Math.random() * colors.length)],
-                    strokeStyle: colors[Math.floor(Math.random() * colors.length)],
-                    lineWidth: 2
-                }
-            }
-        );
-
-        World.add(this.world, ball);
-        this.balls.push(ball);
-
-        // Remove old balls if too many
-        if (this.balls.length > 12) {
-            const oldBall = this.balls.shift();
-            World.remove(this.world, oldBall);
-        }
-    }
-}
 
 // Particle cursor trail
 class CursorTrail {
@@ -852,16 +733,82 @@ class ResponsiveProjects {
     }
 }
 
+// Contact Form Handler
+class ContactForm {
+    constructor() {
+        this.form = document.getElementById('contactForm');
+        this.statusDiv = document.getElementById('form-status');
+        this.init();
+    }
+
+    init() {
+        if (this.form) {
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+    }
+
+    async handleSubmit(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this.form);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message')
+        };
+
+        this.showStatus('loading', 'Sending message...');
+
+        try {
+            // Using Formspree for form handling
+            const response = await fetch('https://formspree.io/f/xdkoqpko', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: data.name,
+                    email: data.email,
+                    subject: data.subject,
+                    message: data.message,
+                    _replyto: data.email
+                })
+            });
+
+            if (response.ok) {
+                this.showStatus('success', 'Message sent successfully! I\'ll get back to you soon.');
+                this.form.reset();
+            } else {
+                throw new Error('Failed to send message');
+            }
+        } catch (error) {
+            this.showStatus('error', 'Failed to send message. Please try emailing me directly at abhinyaay@gmail.com');
+        }
+    }
+
+    showStatus(type, message) {
+        this.statusDiv.className = `form-status ${type}`;
+        this.statusDiv.textContent = message;
+        
+        if (type === 'success') {
+            setTimeout(() => {
+                this.statusDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new PhysicsPortfolio();
     new Navigation();
     new ScrollAnimations();
     new FloatingElements();
-    new ContactPhysics();
     new CursorTrail();
     new ProjectCarousel();
     new ResponsiveProjects();
+    new ContactForm();
 
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
