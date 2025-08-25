@@ -733,23 +733,282 @@ class ResponsiveProjects {
     }
 }
 
+// Project View Toggle functionality
+class ProjectViewToggle {
+    constructor() {
+        this.carousel = document.querySelector('.project-carousel');
+        this.grid = document.getElementById('project-grid');
+        this.navigation = document.getElementById('carousel-navigation');
+        this.toggleButtons = document.querySelectorAll('.toggle-btn');
+        this.currentView = 'carousel';
+        
+        this.init();
+    }
+
+    init() {
+        this.toggleButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const view = e.currentTarget.dataset.view;
+                if (view !== this.currentView) {
+                    this.switchView(view);
+                }
+            });
+        });
+    }
+
+    switchView(view) {
+        // Update button states
+        this.toggleButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === view);
+        });
+
+        // Fade out current view
+        const currentElement = this.currentView === 'carousel' ? this.carousel : this.grid;
+        const currentNavigation = this.navigation;
+        
+        currentElement.style.opacity = '0';
+        currentElement.style.transform = 'translateY(20px)';
+        
+        if (this.currentView === 'carousel') {
+            currentNavigation.style.opacity = '0';
+            currentNavigation.style.transform = 'translateY(20px)';
+        }
+
+        // Switch views after fade out
+        setTimeout(() => {
+            if (view === 'carousel') {
+                this.carousel.style.display = 'block';
+                this.grid.style.display = 'none';
+                this.navigation.style.display = 'flex';
+                
+                // Fade in carousel
+                setTimeout(() => {
+                    this.carousel.style.opacity = '1';
+                    this.carousel.style.transform = 'translateY(0)';
+                    this.navigation.style.opacity = '1';
+                    this.navigation.style.transform = 'translateY(0)';
+                }, 50);
+            } else {
+                this.carousel.style.display = 'none';
+                this.grid.style.display = 'grid';
+                this.navigation.style.display = 'none';
+                
+                // Fade in grid
+                setTimeout(() => {
+                    this.grid.style.opacity = '1';
+                    this.grid.style.transform = 'translateY(0)';
+                }, 50);
+            }
+            
+            this.currentView = view;
+        }, 300);
+    }
+}
+
+// Grid Project Card Interactions
+class GridProjectCards {
+    constructor() {
+        this.cards = document.querySelectorAll('.project-card');
+        this.init();
+    }
+
+    init() {
+        this.cards.forEach(card => {
+            // Add hover effects
+            card.addEventListener('mouseenter', () => {
+                this.createParticleEffect(card);
+            });
+
+            // Add click to view details functionality
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking on action buttons
+                if (!e.target.closest('.card-actions')) {
+                    const projectId = card.dataset.project;
+                    this.showProjectDetails(projectId);
+                }
+            });
+        });
+    }
+
+    createParticleEffect(card) {
+        const rect = card.getBoundingClientRect();
+        const colors = ['#00f5ff', '#7c3aed', '#ff0080', '#ff6b35'];
+        
+        for (let i = 0; i < 6; i++) {
+            const particle = document.createElement('div');
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.cssText = `
+                position: fixed;
+                left: ${rect.left + Math.random() * rect.width}px;
+                top: ${rect.top + Math.random() * rect.height}px;
+                width: 4px;
+                height: 4px;
+                background: ${color};
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+                box-shadow: 0 0 8px ${color};
+            `;
+            
+            document.body.appendChild(particle);
+            
+            // Animate particle
+            particle.animate([
+                { 
+                    transform: 'scale(1) translateY(0)',
+                    opacity: 1
+                },
+                { 
+                    transform: 'scale(0) translateY(-50px)',
+                    opacity: 0
+                }
+            ], {
+                duration: 1000 + Math.random() * 500,
+                easing: 'ease-out'
+            }).onfinish = () => {
+                particle.remove();
+            };
+        }
+    }
+
+    showProjectDetails(projectId) {
+        // Switch to carousel view and show specific project
+        const viewToggle = document.querySelector('[data-view="carousel"]');
+        if (viewToggle && !viewToggle.classList.contains('active')) {
+            viewToggle.click();
+            
+            // Wait for view switch then navigate to project
+            setTimeout(() => {
+                const navBtn = document.querySelector(`[data-target="${projectId}"]`);
+                if (navBtn) {
+                    navBtn.click();
+                }
+            }, 400);
+        } else {
+            // Already in carousel view, just navigate
+            const navBtn = document.querySelector(`[data-target="${projectId}"]`);
+            if (navBtn) {
+                navBtn.click();
+            }
+        }
+    }
+}
+
 // Contact Form Handler
 class ContactForm {
     constructor() {
         this.form = document.getElementById('contactForm');
         this.statusDiv = document.getElementById('form-status');
+        this.submitBtn = null;
+        this.debugMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         this.init();
     }
 
     init() {
         if (this.form) {
+            this.submitBtn = this.form.querySelector('.form-submit-btn');
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            
+            // Add real-time validation
+            this.setupValidation();
         }
+    }
+
+    setupValidation() {
+        const inputs = this.form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => this.validateField(input));
+            input.addEventListener('input', () => this.clearFieldError(input));
+        });
+    }
+
+    validateField(field) {
+        const value = field.value.trim();
+        const fieldName = field.name;
+        let isValid = true;
+        let errorMessage = '';
+
+        // Remove existing error styles
+        field.classList.remove('error');
+
+        switch (fieldName) {
+            case 'name':
+                if (value.length < 2) {
+                    isValid = false;
+                    errorMessage = 'Name must be at least 2 characters long';
+                }
+                break;
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    isValid = false;
+                    errorMessage = 'Please enter a valid email address';
+                }
+                break;
+            case 'subject':
+                if (value.length < 5) {
+                    isValid = false;
+                    errorMessage = 'Subject must be at least 5 characters long';
+                }
+                break;
+            case 'message':
+                if (value.length < 10) {
+                    isValid = false;
+                    errorMessage = 'Message must be at least 10 characters long';
+                }
+                break;
+        }
+
+        if (!isValid) {
+            field.classList.add('error');
+            this.showFieldError(field, errorMessage);
+        }
+
+        return isValid;
+    }
+
+    clearFieldError(field) {
+        field.classList.remove('error');
+        const errorElement = field.parentNode.querySelector('.field-error');
+        if (errorElement) {
+            errorElement.remove();
+        }
+    }
+
+    showFieldError(field, message) {
+        // Remove existing error message
+        this.clearFieldError(field);
+        
+        // Add new error message
+        const errorElement = document.createElement('div');
+        errorElement.className = 'field-error';
+        errorElement.textContent = message;
+        field.parentNode.appendChild(errorElement);
+    }
+
+    validateForm() {
+        const inputs = this.form.querySelectorAll('input[required], textarea[required]');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (!this.validateField(input)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
     }
 
     async handleSubmit(e) {
         e.preventDefault();
         
+        // Validate form before submission
+        if (!this.validateForm()) {
+            this.showStatus('error', 'Please fix the errors above before submitting.');
+            return;
+        }
+
         const formData = new FormData(this.form);
         const data = {
             name: formData.get('name'),
@@ -758,13 +1017,16 @@ class ContactForm {
             message: formData.get('message')
         };
 
+        // Disable submit button and show loading state
+        this.setSubmitButtonState('loading');
         this.showStatus('loading', 'Sending message...');
 
         try {
-            // Using Formspree for form handling
+            // Using Formspree for form handling with proper configuration
             const response = await fetch('https://formspree.io/f/xdkoqpko', {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -772,29 +1034,147 @@ class ContactForm {
                     email: data.email,
                     subject: data.subject,
                     message: data.message,
-                    _replyto: data.email
+                    _replyto: data.email,
+                    _subject: `Portfolio Contact: ${data.subject}`
                 })
             });
+
+            const result = await response.json();
 
             if (response.ok) {
                 this.showStatus('success', 'Message sent successfully! I\'ll get back to you soon.');
                 this.form.reset();
+                this.clearAllFieldErrors();
+                
+                // Track successful submission (optional analytics)
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'form_submit', {
+                        event_category: 'Contact',
+                        event_label: 'Success'
+                    });
+                }
             } else {
-                throw new Error('Failed to send message');
+                throw new Error(result.error || 'Failed to send message');
             }
         } catch (error) {
-            this.showStatus('error', 'Failed to send message. Please try emailing me directly at abhinyaay@gmail.com');
+            console.error('Form submission error:', error);
+            
+            // Debug mode: Show detailed error information
+            if (this.debugMode) {
+                console.log('Form data:', data);
+                console.log('Error details:', {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                });
+            }
+            
+            // Provide more specific error messages and fallback options
+            let errorMessage = 'Failed to send message. ';
+            
+            if (error.name === 'NetworkError' || !navigator.onLine) {
+                errorMessage += 'Please check your internet connection and try again.';
+            } else if (error.message.includes('rate limit')) {
+                errorMessage += 'Too many submissions. Please wait a moment and try again.';
+            } else if (error.message.includes('CORS')) {
+                errorMessage += 'There was a configuration issue. Please try the alternative contact methods below.';
+            } else {
+                errorMessage += 'Please try emailing me directly at abhinyaay@gmail.com';
+            }
+            
+            this.showStatus('error', errorMessage);
+            this.showFallbackOptions(data);
+            
+            // Track failed submission (optional analytics)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'form_submit', {
+                    event_category: 'Contact',
+                    event_label: 'Error'
+                });
+            }
+        } finally {
+            this.setSubmitButtonState('normal');
         }
     }
 
+    setSubmitButtonState(state) {
+        if (!this.submitBtn) return;
+
+        switch (state) {
+            case 'loading':
+                this.submitBtn.disabled = true;
+                this.submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                break;
+            case 'normal':
+                this.submitBtn.disabled = false;
+                this.submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                break;
+        }
+    }
+
+    clearAllFieldErrors() {
+        const errorElements = this.form.querySelectorAll('.field-error');
+        errorElements.forEach(element => element.remove());
+        
+        const errorFields = this.form.querySelectorAll('.error');
+        errorFields.forEach(field => field.classList.remove('error'));
+    }
+
+    showFallbackOptions(data) {
+        // Create fallback buttons for alternative contact methods
+        const fallbackContainer = document.createElement('div');
+        fallbackContainer.className = 'fallback-options';
+        fallbackContainer.innerHTML = `
+            <div class="fallback-title">Alternative Contact Methods:</div>
+            <div class="fallback-buttons">
+                <button class="fallback-btn email-btn" onclick="window.open('mailto:abhinyaay@gmail.com?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(`Hi Abhinay,\n\n${data.message}\n\nBest regards,\n${data.name}\n${data.email}`)}')" title="Open email client">
+                    <i class="fas fa-envelope"></i>
+                    Email Direct
+                </button>
+                <button class="fallback-btn linkedin-btn" onclick="window.open('https://linkedin.com/in/abhinyaay', '_blank')" title="Contact via LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                    LinkedIn
+                </button>
+                <button class="fallback-btn copy-btn" onclick="navigator.clipboard.writeText('abhinyaay@gmail.com').then(() => { this.innerHTML = '<i class=&quot;fas fa-check&quot;></i> Copied!'; setTimeout(() => { this.innerHTML = '<i class=&quot;fas fa-copy&quot;></i> Copy Email'; }, 2000); })" title="Copy email to clipboard">
+                    <i class="fas fa-copy"></i>
+                    Copy Email
+                </button>
+            </div>
+        `;
+
+        // Remove existing fallback options
+        const existingFallback = this.form.querySelector('.fallback-options');
+        if (existingFallback) {
+            existingFallback.remove();
+        }
+
+        // Add new fallback options after the status div
+        this.statusDiv.parentNode.insertBefore(fallbackContainer, this.statusDiv.nextSibling);
+
+        // Auto-remove after 30 seconds
+        setTimeout(() => {
+            if (fallbackContainer.parentNode) {
+                fallbackContainer.remove();
+            }
+        }, 30000);
+    }
+
     showStatus(type, message) {
+        if (!this.statusDiv) return;
+
         this.statusDiv.className = `form-status ${type}`;
         this.statusDiv.textContent = message;
+        this.statusDiv.style.display = 'block';
         
         if (type === 'success') {
             setTimeout(() => {
                 this.statusDiv.style.display = 'none';
-            }, 5000);
+            }, 8000);
+        } else if (type === 'error') {
+            // Keep error messages visible longer
+            setTimeout(() => {
+                this.statusDiv.style.display = 'none';
+            }, 12000);
         }
     }
 }
@@ -808,6 +1188,8 @@ document.addEventListener('DOMContentLoaded', () => {
     new CursorTrail();
     new ProjectCarousel();
     new ResponsiveProjects();
+    new ProjectViewToggle();
+    new GridProjectCards();
     new ContactForm();
 
     // Set dynamic copyright year
