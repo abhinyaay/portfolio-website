@@ -810,6 +810,12 @@ document.addEventListener('DOMContentLoaded', () => {
     new ResponsiveProjects();
     new ContactForm();
 
+    // Set dynamic copyright year
+    const currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+    }
+
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
