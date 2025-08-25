@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Favicon PNGs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0a0a0a;
+            color: white;
+        }
+        canvas {
+            border: 1px solid #333;
+            margin: 10px;
+            background: white;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .download-btn {
+            background: #00f5ff;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Favicon Generator</h1>
+        <p>This will generate PNG favicons from the SVG design:</p>
+        
+        <canvas id="favicon16" width="16" height="16"></canvas>
+        <button class="download-btn" onclick="downloadCanvas('favicon16', 'favicon-16x16.png')">Download 16x16</button>
+        
+        <canvas id="favicon32" width="32" height="32"></canvas>
+        <button class="download-btn" onclick="downloadCanvas('favicon32', 'favicon-32x32.png')">Download 32x32</button>
+        
+        <canvas id="apple-icon" width="180" height="180"></canvas>
+        <button class="download-btn" onclick="downloadCanvas('apple-icon', 'apple-touch-icon.png')">Download Apple Touch Icon</button>
+    </div>
+
+    <script>
+        function drawFavicon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const center = size / 2;
+            
+            // Clear canvas
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#00f5ff');
+            gradient.addColorStop(1, '#7c3aed');
+            
+            // Outer ring
+            ctx.strokeStyle = gradient;
+            ctx.globalAlpha = 0.9;
+            ctx.lineWidth = size * 0.05;
+            ctx.beginPath();
+            ctx.arc(center, center, size * 0.4, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Inner hexagon
+            ctx.globalAlpha = 0.7;
+            ctx.lineWidth = size * 0.03;
+            ctx.beginPath();
+            const hexRadius = size * 0.3;
+            for (let i = 0; i < 6; i++) {
+                const angle = (i * Math.PI) / 3;
+                const x = center + hexRadius * Math.cos(angle);
+                const y = center + hexRadius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            
+            // Center circle
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(center, center, size * 0.06, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Corner circles
+            const cornerOffset = size * 0.15;
+            const cornerSize = size * 0.05;
+            
+            ctx.globalAlpha = 0.9;
+            
+            // Top-left (cyan)
+            ctx.fillStyle = '#00f5ff';
+            ctx.beginPath();
+            ctx.arc(center - cornerOffset, center - cornerOffset, cornerSize, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Top-right (purple)
+            ctx.fillStyle = '#7c3aed';
+            ctx.beginPath();
+            ctx.arc(center + cornerOffset, center - cornerOffset, cornerSize, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bottom-left (pink)
+            ctx.fillStyle = '#ff0080';
+            ctx.beginPath();
+            ctx.arc(center - cornerOffset, center + cornerOffset, cornerSize, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bottom-right (orange)
+            ctx.fillStyle = '#ff6b35';
+            ctx.beginPath();
+            ctx.arc(center + cornerOffset, center + cornerOffset, cornerSize, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Connection lines
+            ctx.globalAlpha = 0.6;
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = size * 0.02;
+            
+            // Lines to center
+            ctx.beginPath();
+            ctx.moveTo(center - cornerOffset, center - cornerOffset);
+            ctx.lineTo(center, center);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(center + cornerOffset, center - cornerOffset);
+            ctx.lineTo(center, center);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(center - cornerOffset, center + cornerOffset);
+            ctx.lineTo(center, center);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(center + cornerOffset, center + cornerOffset);
+            ctx.lineTo(center, center);
+            ctx.stroke();
+        }
+        
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Generate all favicons
+        drawFavicon(document.getElementById('favicon16'), 16);
+        drawFavicon(document.getElementById('favicon32'), 32);
+        drawFavicon(document.getElementById('apple-icon'), 180);
+        
+        console.log('Favicons generated! Click the download buttons to save them.');
+    </script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhinay Kumar - DevOps Engineer & Developer</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+    <!-- Physics Canvas Background -->
+    <canvas id="physics-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-container">
+                    <svg class="logo-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer ring -->
+                        <circle cx="30" cy="30" r="28" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.8"/>
+                        
+                        <!-- Inner hexagon -->
+                        <polygon points="30,8 45,18 45,38 30,48 15,38 15,18" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6"/>
+                        
+                        <!-- Center elements -->
+                        <circle cx="30" cy="30" r="3" fill="url(#logoGradient)"/>
+                        <circle cx="22" cy="22" r="2" fill="#00f5ff" opacity="0.8"/>
+                        <circle cx="38" cy="22" r="2" fill="#7c3aed" opacity="0.8"/>
+                        <circle cx="22" cy="38" r="2" fill="#ff0080" opacity="0.8"/>
+                        <circle cx="38" cy="38" r="2" fill="#ff6b35" opacity="0.8"/>
+                        
+                        <!-- Connection lines -->
+                        <line x1="22" y1="22" x2="30" y2="30" stroke="url(#logoGradient)" stroke-width="1" opacity="0.5"/>
+                        <line x1="38" y1="22" x2="30" y2="30" stroke="url(#logoGradient)" stroke-width="1" opacity="0.5"/>
+                        <line x1="22" y1="38" x2="30" y2="30" stroke="url(#logoGradient)" stroke-width="1" opacity="0.5"/>
+                        <line x1="38" y1="38" x2="30" y2="30" stroke="url(#logoGradient)" stroke-width="1" opacity="0.5"/>
+                        
+                        <!-- Gradient definition -->
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00f5ff;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">Abhinay</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Abhinay Kumar</span>
+                </h1>
+                <h2 class="hero-subtitle">DevOps Engineer & Developer</h2>
+                <p class="hero-description">
+                    Passionate about automation, cloud infrastructure, and building scalable solutions.
+                    Transforming ideas into reality with cutting-edge technology.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">Get In Touch</a>
+                    <a href="#projects" class="btn btn-secondary">View Projects</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-elements">
+                    <div class="floating-element" data-speed="2">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <div class="floating-element" data-speed="3">
+                        <i class="fab fa-aws"></i>
+                    </div>
+                    <div class="floating-element" data-speed="1.5">
+                        <i class="fab fa-docker"></i>
+                    </div>
+                    <div class="floating-element" data-speed="2.5">
+                        <i class="fab fa-linux"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+            <span>Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-intro">
+                        I'm a passionate DevOps Engineer and Developer with expertise in cloud infrastructure, 
+                        automation, and modern development practices. I love creating efficient, scalable solutions 
+                        that bridge the gap between development and operations.
+                    </p>
+                    <div class="about-highlights">
+                        <div class="highlight-item">
+                            <i class="fas fa-cloud"></i>
+                            <h3>Cloud Infrastructure</h3>
+                            <p>Expert in AWS services, designing and managing scalable cloud architectures.</p>
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-cogs"></i>
+                            <h3>Automation</h3>
+                            <p>Building CI/CD pipelines and automation scripts to streamline development workflows.</p>
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-code"></i>
+                            <h3>Development</h3>
+                            <p>Proficient in Python and C/C++ for creating robust applications and tools.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Programming Languages</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fab fa-python"></i>
+                            <span>Python</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-code"></i>
+                            <span>C/C++</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-terminal"></i>
+                            <span>Shell Scripting</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Cloud & Infrastructure</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fab fa-aws"></i>
+                            <span>AWS</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-docker"></i>
+                            <span>Docker</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-dharmachakra"></i>
+                            <span>Kubernetes</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>DevOps Tools</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <i class="fab fa-jenkins"></i>
+                            <span>Jenkins</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-linux"></i>
+                            <span>Linux</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-robot"></i>
+                            <span>Automation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            
+            <!-- Project Showcase Carousel -->
+            <div class="project-showcase">
+                <div class="project-carousel">
+                    
+                    <!-- SuperCash Project -->
+                    <div class="project-slide active" data-project="supercash">
+                        <div class="project-main">
+                            <div class="project-visual">
+                                <div class="project-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="project-preview">
+                                    <div class="preview-screen">
+                                        <div class="screen-header">
+                                            <div class="header-dots">
+                                                <span></span><span></span><span></span>
+                                            </div>
+                                            <span class="header-title">SuperCash Dashboard</span>
+                                        </div>
+                                        <div class="screen-content">
+                                            <div class="chart-area">
+                                                <div class="chart-bars">
+                                                    <div class="bar" style="height: 60%"></div>
+                                                    <div class="bar" style="height: 80%"></div>
+                                                    <div class="bar" style="height: 45%"></div>
+                                                    <div class="bar" style="height: 90%"></div>
+                                                    <div class="bar" style="height: 70%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="data-cards">
+                                                <div class="data-card"></div>
+                                                <div class="data-card"></div>
+                                                <div class="data-card"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-details">
+                                <div class="project-header">
+                                    <h3>SuperCash</h3>
+                                    <div class="project-status">
+                                        <span class="status-badge featured">Featured</span>
+                                    </div>
+                                </div>
+                                <p class="project-description">
+                                    A comprehensive financial solution for streamers, enabling seamless payment processing, 
+                                    revenue management, and real-time analytics. Built with enterprise-grade infrastructure 
+                                    for scalability and reliability.
+                                </p>
+                                <div class="project-highlights">
+                                    <div class="highlight">
+                                        <i class="fas fa-users"></i>
+                                        <span>10K+ Active Users</span>
+                                    </div>
+                                    <div class="highlight">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>99.9% Uptime</span>
+                                    </div>
+                                    <div class="highlight">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Bank-Grade Security</span>
+                                    </div>
+                                </div>
+                                <div class="project-tech">
+                                    <span class="tech-tag primary">Python</span>
+                                    <span class="tech-tag">C/C++</span>
+                                    <span class="tech-tag">AWS</span>
+                                    <span class="tech-tag">Docker</span>
+                                    <span class="tech-tag">Kubernetes</span>
+                                    <span class="tech-tag">Jenkins</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        Live Demo
+                                    </a>
+                                    <a href="#" class="btn btn-secondary">
+                                        <i class="fab fa-github"></i>
+                                        Source Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Python Automation Bot Project -->
+                    <div class="project-slide" data-project="automation">
+                        <div class="project-main">
+                            <div class="project-visual">
+                                <div class="project-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="project-preview">
+                                    <div class="preview-terminal">
+                                        <div class="terminal-header">
+                                            <div class="terminal-controls">
+                                                <span class="control red"></span>
+                                                <span class="control yellow"></span>
+                                                <span class="control green"></span>
+                                            </div>
+                                            <span class="terminal-title">automation_bot.py</span>
+                                        </div>
+                                        <div class="terminal-content">
+                                            <div class="terminal-line">
+                                                <span class="prompt">$</span>
+                                                <span class="command">python automation_bot.py --start</span>
+                                            </div>
+                                            <div class="terminal-line output">
+                                                <span class="text-success">✓ Bot initialized successfully</span>
+                                            </div>
+                                            <div class="terminal-line output">
+                                                <span class="text-info">→ Scheduling 15 tasks...</span>
+                                            </div>
+                                            <div class="terminal-line output">
+                                                <span class="text-success">✓ All reminders set</span>
+                                            </div>
+                                            <div class="terminal-line">
+                                                <span class="prompt">$</span>
+                                                <span class="cursor">_</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-details">
+                                <div class="project-header">
+                                    <h3>Python Automation Bot</h3>
+                                    <div class="project-status">
+                                        <span class="status-badge">Personal</span>
+                                    </div>
+                                </div>
+                                <p class="project-description">
+                                    Intelligent reminder system that automates daily tasks and notifications with smart 
+                                    scheduling. Features natural language processing for task creation and adaptive 
+                                    scheduling based on user behavior patterns.
+                                </p>
+                                <div class="project-highlights">
+                                    <div class="highlight">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Smart Scheduling</span>
+                                    </div>
+                                    <div class="highlight">
+                                        <i class="fas fa-brain"></i>
+                                        <span>AI-Powered</span>
+                                    </div>
+                                    <div class="highlight">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span>Cross-Platform</span>
+                                    </div>
+                                </div>
+                                <div class="project-tech">
+                                    <span class="tech-tag primary">Python</span>
+                                    <span class="tech-tag">Automation</span>
+                                    <span class="tech-tag">NLP</span>
+                                    <span class="tech-tag">SQLite</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fab fa-github"></i>
+                                        View Code
+                                    </a>
+                                    <a href="#" class="btn btn-secondary">
+                                        <i class="fas fa-play"></i>
+                                        Demo Video
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AR Trainer Project -->
+                    <div class="project-slide" data-project="ar-trainer">
+                        <div class="project-main">
+                            <div class="project-visual">
+                                <div class="project-icon">
+                                    <i class="fas fa-vr-cardboard"></i>
+                                </div>
+                                <div class="project-preview">
+                                    <div class="preview-ar">
+                                        <div class="ar-viewport">
+                                            <div class="ar-overlay">
+                                                <div class="ar-skeleton">
+                                                    <div class="joint head"></div>
+                                                    <div class="joint shoulder-left"></div>
+                                                    <div class="joint shoulder-right"></div>
+                                                    <div class="joint elbow-left"></div>
+                                                    <div class="joint elbow-right"></div>
+                                                    <div class="joint hand-left"></div>
+                                                    <div class="joint hand-right"></div>
+                                                    <div class="joint hip-left"></div>
+                                                    <div class="joint hip-right"></div>
+                                                    <div class="joint knee-left"></div>
+                                                    <div class="joint knee-right"></div>
+                                                    <div class="joint foot-left"></div>
+                                                    <div class="joint foot-right"></div>
+                                                </div>
+                                                <div class="ar-feedback">
+                                                    <div class="feedback-score">85%</div>
+                                                    <div class="feedback-text">Great posture!</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-details">
+                                <div class="project-header">
+                                    <h3>AR Trainer</h3>
+                                    <div class="project-status">
+                                        <span class="status-badge innovative">Innovative</span>
+                                    </div>
+                                </div>
+                                <p class="project-description">
+                                    Augmented Reality application for interactive training experiences and skill development. 
+                                    Uses computer vision to track body movements and provide real-time feedback for 
+                                    exercise form correction and training optimization.
+                                </p>
+                                <div class="project-highlights">
+                                    <div class="highlight">
+                                        <i class="fas fa-eye"></i>
+                                        <span>Real-time Tracking</span>
+                                    </div>
+                                    <div class="highlight">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>Progress Analytics</span>
+                                    </div>
+                                    <div class="highlight">
+                                        <i class="fas fa-trophy"></i>
+                                        <span>Gamification</span>
+                                    </div>
+                                </div>
+                                <div class="project-tech">
+                                    <span class="tech-tag primary">JavaScript</span>
+                                    <span class="tech-tag">MediaPipe</span>
+                                    <span class="tech-tag">React</span>
+                                    <span class="tech-tag">WebGL</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-play"></i>
+                                        Try Demo
+                                    </a>
+                                    <a href="#" class="btn btn-secondary">
+                                        <i class="fas fa-code"></i>
+                                        Source Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Navigation -->
+                <div class="project-navigation">
+                    <button class="nav-btn active" data-target="supercash">
+                        <div class="nav-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <span>SuperCash</span>
+                    </button>
+                    <button class="nav-btn" data-target="automation">
+                        <div class="nav-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <span>Automation Bot</span>
+                    </button>
+                    <button class="nav-btn" data-target="ar-trainer">
+                        <div class="nav-icon">
+                            <i class="fas fa-vr-cardboard"></i>
+                        </div>
+                        <span>AR Trainer</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Let's Connect</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <p>I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology!</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <a href="mailto:abhinyaay@gmail.com">abhinyaay@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <a href="tel:+919119754354">+91-9119754354</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fab fa-linkedin"></i>
+                            <div>
+                                <h4>LinkedIn</h4>
+                                <a href="https://linkedin.com/in/abhinyaay" target="_blank">linkedin.com/in/abhinyaay</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fab fa-github"></i>
+                            <div>
+                                <h4>GitHub</h4>
+                                <a href="https://github.com/abhinyaay" target="_blank">github.com/abhinyaay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-visual">
+                    <div class="physics-playground" id="contact-physics">
+                        <!-- Physics elements will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Abhinay Kumar. Built with passion and love!</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
