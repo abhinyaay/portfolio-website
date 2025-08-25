@@ -5,6 +5,12 @@
     box-sizing: border-box;
 }
 
+/* Prevent horizontal scroll on mobile */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 :root {
     --primary-color: #4f8fff;
     --secondary-color: #6366f1;
@@ -705,6 +711,18 @@ section {
     width: 10px;
     height: 10px;
     border-radius: 50%;
+}
+
+.browser-controls .control.red {
+    background: #ff5f57;
+}
+
+.browser-controls .control.yellow {
+    background: #ffbd2e;
+}
+
+.browser-controls .control.green {
+    background: #28ca42;
 }
 
 .address-bar {
@@ -1713,7 +1731,8 @@ section {
     }
     
     .btn {
-        width: 250px;
+        width: 100%;
+        max-width: 280px;
     }
     
     .floating-elements {
@@ -1732,7 +1751,8 @@ section {
     }
     
     .skills-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
     
     .project-main {
@@ -1781,6 +1801,65 @@ section {
     .contact-form h3 {
         font-size: 1.5rem;
     }
+    
+    /* Mobile-specific project preview fixes */
+    .preview-browser {
+        max-width: 100%;
+    }
+    
+    .browser-content {
+        padding: 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .stat-card {
+        padding: 0.6rem;
+    }
+    
+    .mini-nav {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        justify-content: center;
+    }
+    
+    .mini-nav span {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.4rem;
+        width: 100%;
+    }
+    
+    .mini-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.6rem;
+        width: 100%;
+    }
+    
+    /* AR App mobile fixes */
+    .ar-controls {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+    
+    .ar-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.6rem;
+    }
+    
+    .camera-feed {
+        height: 120px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1790,6 +1869,15 @@ section {
     
     .hero {
         padding: 80px 15px 30px;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
     }
     
     .floating-elements {
@@ -1804,14 +1892,108 @@ section {
     }
     
     .highlight-item {
-        padding: 2rem;
+        padding: 1.5rem;
     }
     
     .skill-category {
-        padding: 2rem;
+        padding: 1.5rem;
+    }
+    
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
     
     .project-card {
         padding: 1.5rem;
+    }
+    
+    .project-main {
+        padding: 1rem;
+    }
+    
+    .preview-browser {
+        max-width: 100%;
+        font-size: 0.7rem;
+    }
+    
+    .browser-content {
+        padding: 0.8rem;
+        font-size: 0.7rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+    
+    .stat-card {
+        padding: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.55rem;
+    }
+    
+    .stat-value {
+        font-size: 0.7rem;
+    }
+    
+    .mini-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.55rem;
+    }
+    
+    .ar-controls {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+    
+    .ar-btn {
+        flex: 1;
+        min-width: 60px;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.55rem;
+    }
+    
+    .camera-feed {
+        height: 100px;
+        padding: 0.8rem;
+    }
+    
+    .pose-point {
+        width: 4px;
+        height: 4px;
+    }
+    
+    .accuracy-badge,
+    .rep-counter {
+        font-size: 0.5rem;
+        padding: 0.1rem 0.3rem;
+    }
+    
+    .contact-form-container {
+        padding: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .nav-btn {
+        padding: 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .nav-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
     }
 }
